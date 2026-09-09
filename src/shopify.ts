@@ -33,18 +33,19 @@ export async function paginate<T>(
   gql: Gql,
   query: string,
   pick: (data: any) => { pageInfo: { hasNextPage: boolean; endCursor: string | null }; nodes: T[] } | null | undefined,
-  variables: Record<string, unknown> = {},
+  options: { variables?: Record<string, unknown>; max?: number } = {},
 ): Promise<T[]> {
   const nodes: T[] = [];
+  const max = options.max ?? Infinity;
   let cursor: string | null = null;
   do {
-    const result = await gql(query, { ...variables, cursor });
+    const result = await gql(query, { ...(options.variables ?? {}), cursor });
     const connection = pick(result?.data);
     if (!connection) return nodes;
     nodes.push(...connection.nodes);
     cursor = connection.pageInfo.hasNextPage ? connection.pageInfo.endCursor : null;
-  } while (cursor);
-  return nodes;
+  } while (cursor && nodes.length < max);
+  return nodes.slice(0, max);
 }
 
 /**
