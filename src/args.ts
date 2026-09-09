@@ -48,6 +48,10 @@ export const GLOBAL_OPTIONS: Record<string, OptionSpec> = {
     placeholder: "<token>",
     summary: "Acknowledge a destructive command's named target.",
   },
+  production: {
+    kind: "flag",
+    summary: "Target the production database instead of the local one.",
+  },
   help: { kind: "flag", summary: "Show this help." },
 };
 
