@@ -29,7 +29,7 @@ export function assertNoUserErrors(
 }
 
 /** Walk a cursor-paginated Admin GraphQL connection. */
-export async function paginate<T>(
+export async function paginate<T = any>(
   gql: Gql,
   query: string,
   pick: (data: any) => { pageInfo: { hasNextPage: boolean; endCursor: string | null }; nodes: T[] } | null | undefined,
