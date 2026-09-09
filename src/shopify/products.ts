@@ -65,6 +65,8 @@ export function createProductsGroup(options: {
   openShop: OpenShop;
   /** Called before an applied product deletion. Throw to refuse the target. */
   assertDeleteAllowed?: (shop: string) => void;
+  /** Host-specific target policy rendered in `products delete --help`. */
+  deletePolicyDetails?: string;
 }): Group<ShopifyStore> {
   return {
     name: "products",
@@ -100,7 +102,8 @@ export function createProductsGroup(options: {
         name: "delete",
         summary: "Permanently delete explicit products.",
         details:
-          "Deletion is irreversible. Review the dry-run output first; the applied invocation also requires --confirm=<shop>.",
+          "Deletion is irreversible. Review the dry-run output first; the applied invocation also requires --confirm=<shop>." +
+          (options.deletePolicyDetails ? `\n\n${options.deletePolicyDetails}` : ""),
         writes: true,
         confirm: ({ required }) => required("shop"),
         ...handleInput,

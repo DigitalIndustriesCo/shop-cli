@@ -75,6 +75,7 @@ const groups = [
     openShop: tokenStore({ apiVersion: "2025-10" }),
     // A host may reject protected shops before an applied deletion.
     assertDeleteAllowed: (shop) => assertSafeTarget(shop),
+    deletePolicyDetails: "This host refuses deletion on its live store.",
   }),
 ];
 await run("shop", groups, process.argv.slice(2));
@@ -87,7 +88,9 @@ await run("shop", groups, process.argv.slice(2));
 
 `tokenStore` is for projects using a direct Admin token. An embedded app should
 pass its own `OpenShop` adapter, which keeps its session/database routing and
-live-store policy in the host while still using the shared commands.
+live-store policy in the host while still using the shared commands. Pass that
+host policy as `deletePolicyDetails` too, so `products delete --help` documents
+which targets the host refuses.
 
 ## Boundaries
 
