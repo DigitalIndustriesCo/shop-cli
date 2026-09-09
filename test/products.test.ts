@@ -3,7 +3,10 @@ import { describe, expect, it, vi } from "vitest";
 import { run } from "../src/run";
 import { createProductsGroup } from "../src/shopify/products";
 
-const invoke = async (argv: string[], handlers: { rejectDelete?: boolean } = {}) => {
+const invoke = async (
+  argv: string[],
+  handlers: { rejectDelete?: boolean; deletePolicyDetails?: string } = {},
+) => {
   const gql = vi.fn(async (query: string, variables?: Record<string, unknown>) => {
     if (query.includes("query ProductForOperation")) {
       const handle = variables?.handle;
@@ -22,6 +25,7 @@ const invoke = async (argv: string[], handlers: { rejectDelete?: boolean } = {})
     assertDeleteAllowed: () => {
       if (handlers.rejectDelete) throw new Error("deletion is not allowed here");
     },
+    deletePolicyDetails: handlers.deletePolicyDetails,
   });
   const result = await run("shop", [group], argv, {
     out: (line) => out.push(line),
@@ -31,6 +35,15 @@ const invoke = async (argv: string[], handlers: { rejectDelete?: boolean } = {})
 };
 
 describe("products delete", () => {
+  it("renders a host's delete policy in command help", async () => {
+    const result = await invoke(
+      ["products", "delete", "--help"],
+      { deletePolicyDetails: "This host refuses product deletion on its live store." },
+    );
+    expect(result.exitCode).toBe(0);
+    expect(result.out).toContain("This host refuses product deletion on its live store.");
+  });
+
   it("plans an explicit handle without deleting by default", async () => {
     const result = await invoke(["products", "delete", "one", "--shop=example.myshopify.com"]);
     expect(result.exitCode).toBe(0);
