@@ -1,4 +1,4 @@
-# @doubledome/shop-cli
+# @digitalindustriesco/shop-cli
 
 Framework-neutral, safety-first primitives for operational CLIs. It deliberately
 contains no Shopify, database, environment, or project-specific knowledge.
@@ -10,20 +10,20 @@ write gating, destructive-operation confirmation, and testable exit handling.
 ## Install
 
 ```sh
-npm install @doubledome/shop-cli
+npm install @digitalindustriesco/shop-cli
 ```
 
 GitHub Packages consumers need a project or user `.npmrc` containing:
 
 ```ini
-@doubledome:registry=https://npm.pkg.github.com
+@digitalindustriesco:registry=https://npm.pkg.github.com
 ```
 
 ## Use
 
 ```ts
 import process from "node:process";
-import { run, type Group } from "@doubledome/shop-cli";
+import { run, type Group } from "@digitalindustriesco/shop-cli";
 
 type Client = { deleteWidget(id: string): Promise<void> };
 
