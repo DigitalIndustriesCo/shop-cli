@@ -1,6 +1,6 @@
 {
   "name": "@digitalindustriesco/shop-cli",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "Framework-neutral, safety-first primitives for operational CLIs.",
   "type": "module",
   "exports": {

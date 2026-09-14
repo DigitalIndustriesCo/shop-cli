@@ -19,13 +19,25 @@ export const SHOP_OPTION = {
   },
 };
 
+/**
+ * Renders one Admin GraphQL userError, prefixed by its field path.
+ *
+ * The path is what identifies which input was rejected when a mutation takes
+ * many; Shopify omits it for errors about the operation as a whole, and those
+ * read better without an empty prefix.
+ */
+function userErrorText(error: { message?: string; field?: string[] | null }): string {
+  const message = error.message ?? "unknown error";
+  const field = error.field?.length ? error.field.join(".") : "";
+  return field ? `${field}: ${message}` : message;
+}
+
 /** Throws on an Admin GraphQL mutation's userErrors payload. */
 export function assertNoUserErrors(
   mutation: string,
   errors: Array<{ message?: string; field?: string[] | null }> | undefined,
 ): void {
-  if (errors?.length)
-    throw new Error(`${mutation}: ${errors.map((error) => error.message ?? "unknown error").join("; ")}`);
+  if (errors?.length) throw new Error(`${mutation}: ${errors.map(userErrorText).join("; ")}`);
 }
 
 /** Walk a cursor-paginated Admin GraphQL connection. */
